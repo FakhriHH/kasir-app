@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
+const userRoutes = require('./routes/userRoutes')
+
 require("dotenv").config();
 
 
@@ -22,6 +24,8 @@ db.raw("SELECT 1")
     console.error("Database connection failed:", err.message);
     process.exit(1);
   });
+
+app.use('/api/users', userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Kasir Backend API is running 🚀");
