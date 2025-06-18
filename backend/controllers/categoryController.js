@@ -28,7 +28,7 @@ exports.update = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
-    const updated = await model.updateKategori(id, { name });
+    const updated = await model.updateCategory(id, { name });
 
     if (!updated) {
       return res.status(404).json({ error: 'Kategori tidak ditemukan.' });
@@ -44,7 +44,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await model.deleteKategori(id);
+    const deleted = await model.deleteCategory(id);
 
     if (!deleted) {
       return res.status(404).json({ error: 'Kategori tidak ditemukan.' });
