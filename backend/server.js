@@ -4,6 +4,8 @@ const db = require("./config/db");
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const stockInRoutes = require('./routes/stockInRoutes');
+const stockOutRoutes = require('./routes/stockOutRoutes');
 
 require("dotenv").config();
 
@@ -17,7 +19,6 @@ app.use(express.json());
 db.raw("SELECT 1")
   .then(() => {
     console.log("Database connected");
-    // Jalankan server hanya jika koneksi DB berhasil
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
@@ -30,8 +31,10 @@ db.raw("SELECT 1")
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/stock-in', stockInRoutes);
+app.use('/api/stock-out', stockOutRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Kasir Backend API is running 🚀");
+  res.send("Kasir Backend API is running");
 });
 

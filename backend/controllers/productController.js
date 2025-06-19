@@ -6,7 +6,7 @@ exports.index = async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error mengambil data Produk :', error);
-        res.satuts(500).json({ error: 'Gagal mengambil data Produk.' });
+        res.status(500).json({ error: 'Gagal mengambil data Produk.' });
     }
 };
 

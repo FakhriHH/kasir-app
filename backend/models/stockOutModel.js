@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const getAll = () =>
   db('product_out')
-    .select('product_out.*', 'product.name as product_name')
+    .select('product_out.*', 'products.name as product_name')
     .leftJoin('products', 'product_out.product_id', 'products.id');
 
 const create = async (data) => {
