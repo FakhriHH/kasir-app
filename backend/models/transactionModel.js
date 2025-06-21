@@ -1,23 +1,66 @@
 const db = require('../config/db');
 
+// const insertTransaction = async (trxData, detailItems) => {
+//   return db.transaction(async trx => {
+//     const [trxId] = await trx('transactions').insert(trxData);
+
+//     for (const item of detailItems) {
+//       const products = await trx('products').where('id', item.product_id).first();
+//       const subtotal = item.quantity * products.price;
+
+//       await trx('transaction_details').insert({
+//         transaction_id: trxId,
+//         product_id: item.product_id,
+//         quantity: item.quantity,
+//         unit_price: products.price,
+//         subtotal
+//       });
+
+//       await trx('products').where('id', item.product_id).decrement('stock', item.quantity);
+//     }
+
+//     return trxId;
+//   });
+// };
+
 const insertTransaction = async (trxData, detailItems) => {
   return db.transaction(async trx => {
-    const [trxId] = await trx('transactions').insert(trxData);
+    let totalSemua = 0;
+
+    // Simpan transaksi utama dengan total = 0 sementara
+    const [trxId] = await trx('transactions').insert({
+      transaction_code: trxData.transaction_code,
+      user_id: trxData.user_id,
+      total: 0,
+      transaction_date: trxData.transaction_date
+    });
 
     for (const item of detailItems) {
-      const products = await trx('products').where('id', item.product_id).first();
-      const subtotal = item.quantity * products.price;
+      const product = await trx('products').where('id', item.product_id).first();
+
+      if (!product) {
+        throw new Error(`Produk ID ${item.product_id} tidak ditemukan`);
+      }
+
+      const subtotal = item.quantity * product.price;
 
       await trx('transaction_details').insert({
         transaction_id: trxId,
         product_id: item.product_id,
         quantity: item.quantity,
-        unit_price: products.price,
+        unit_price: product.price,
         subtotal
       });
 
+      // Update stok produk
       await trx('products').where('id', item.product_id).decrement('stock', item.quantity);
+
+      // Hitung total semua
+      totalSemua += subtotal;
     }
+
+    // Update total transaksi
+    await trx('transactions').where({ id: trxId }).update({ total: totalSemua });
 
     return trxId;
   });
