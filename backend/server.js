@@ -9,6 +9,7 @@ const stockOutRoutes = require('./routes/stockOutRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const salesReportRoutes = require('./routes/reportRoutes');
 const stockReportRoutes = require('./routes/stockReportRoutes');
+const finalStockRoutes = require('./routes/finalStockRoutes');
 
 require("dotenv").config();
 
@@ -39,6 +40,7 @@ app.use('/api/stock-out', stockOutRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/reports', salesReportRoutes);
 app.use('/api/stock-report', stockReportRoutes);
+app.use('/api/final-stock', finalStockRoutes);
 
 app.get("/", (req, res) => {
   res.send("Kasir Backend API is running");
